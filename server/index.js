@@ -3,6 +3,7 @@ const session = require("express-session");
 const connectDB = require("./config/db");
 const setPassport = require("./config/passport");
 const passport = require("passport");
+const MongoStore = require('connect-mongo');
 
 const app = express();
 setPassport(passport);
@@ -24,5 +25,25 @@ app.use((req, res, next) => {
   res.locals.user = req.user || null;
   next();
 })
+
+app.use("/auth", require("./routes/auth"));
+
+function ensureAuthenticated(req, res, next){
+  if(req.isAuthenticated()){
+    next();
+  }else{
+    res.redirect("/login");
+  }
+}
+
+app.use("/login", (req, res) => {
+  res.send(`<a href="/auth/google">login</a>`);
+})
+
+app.use("/", ensureAuthenticated, (req, res) => {
+  res.send(res.locals);
+})
+
+
 
 module.exports = app;
