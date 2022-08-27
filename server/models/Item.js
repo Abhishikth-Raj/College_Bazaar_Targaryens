@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const DetailSchema = new Schema({
+const DetailSchema = new mongoose.Schema({
   itemInfo: {
     type: Map,
     of: String,
@@ -40,6 +40,14 @@ const itemSchema = new mongoose.Schema({
       type: DetailSchema,
     },
   ],
+});
+
+itemSchema.pre(/^find/, function (next) {
+  this.populate({
+    path: "owner",
+    select: "displayName email image isBlacklisted contact ",
+  });
+  next();
 });
 
 const Item = mongoose.model("Item", itemSchema);
