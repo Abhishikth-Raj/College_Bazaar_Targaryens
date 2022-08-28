@@ -48,13 +48,13 @@ const userSchema = new mongoose.Schema({
   ],
 });
 
-userSchema.pre(/^find/, async function (next) {
-  const soldItemsPromises = this.soldItems.map(
-    async (itemId) => await Item.findById(itemId)
-  );
-  this.soldItems = await Promise.all(soldItemsPromises);
-  next();
-});
+// userSchema.pre(/^find/, async function (next) {
+//   const soldItemsPromises = this.soldItems.map(
+//     async (itemId) => await Item.findById(itemId)
+//   );
+//   this.soldItems = await Promise.all(soldItemsPromises);
+//   next();
+// });
 
 const User = mongoose.model("User", userSchema);
 module.exports = User;
